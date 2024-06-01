@@ -109,9 +109,13 @@ app.get("/atividades", (req, res) => {
   res.render("atividades.ejs");
 });
 
-//app.get("/aaaaa", (req, res) => {
-  //res.render("aaaaa.ejs");
-//});
+app.get("/aaaaa", (req, res) => {
+  res.render("aaaaa.ejs");
+});
+
+app.get("/a", (req, res) => {
+  res.render("a.ejs");
+});
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
