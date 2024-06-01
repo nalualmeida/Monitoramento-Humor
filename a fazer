@@ -1,0 +1,23 @@
+addLembrete:
+
+- na pesquisa dos medicamentos, colocar eles dentro de uma div limitada em que o ususário possar dar um scrolldown. Assim a lista de medicamentos não ocupará toda a tela.
+
+- se o usuário marcar a opção duas vezes na semana, deve aparecer  outra opção de horário e outra de dose para a segunda vez do dia.
+
+- se o usuário marcar sob demanda, os campos de horário e dose não precisam aparecer
+
+- ou seja, apenas no campo "uma vez ao dia" deve-se aparecer esses campos (uma vez)
+
+- quando não houver nenhum medicamento correspondente a pesquisa avisar com uma mensagemn
+
+- verificar se o arquivos /routes/lembretes.js é necessário, pois não tem nenhum conteúdo
+
+- +addInventario - quando o usuário clica no botão de voltar para a página addLembrete, ela não está mais com as informações salvas. E elas devem ficar salvas
+
+videos gravação:
+
+- avisar que alterou o banco de dados.
+
+sign in e sign up:
+
+

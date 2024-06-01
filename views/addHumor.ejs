@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <title>Meu Humor</title>
+</head>
+
+
+
+<header class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+    <div class="">
+      <button type="button" class="btn btn-primary">
+        <a class="nav-link" href="/inicioHoje">X</a>
+      </button>
+    </div>
+</header>
+<main class="container">
+
+<form class="position-relative bg-body" action="/addHumor" method="post">
+    <h1 class="container text-body-emphasis">Como você está?</h1>
+    <div class="d-flex align-items-center justify-content-center px-3">
+        <div class="form-floating">
+            <label for="dataNascimento">Data de nascimento</label>
+          <input type="date" class="form-control" id="floatingInput" name="dataNascimento">
+        </div> 
+    </div>
+
+    <div class="grid gap-3 justify-content-center py-3">
+        <button onclick="" class="btn btn-success rounded-pill px-3" type="button">excelente</button>
+        <button onclick="" class="btn btn-primary rounded-pill px-3" type="button">bem</button>
+        <button onclick="" class="btn btn-secondary rounded-pill px-3" type="button">mais ou menos</button>
+        <button onclick="" class="btn btn-warning rounded-pill px-3" type="button">mal</button>
+        <button onclick="" class="btn btn-danger rounded-pill px-3" type="button">horrível</button>
+      </div>
+
+      <div class="container text-center border p-2 my-2 ">
+        <h6>Emoções</h6>
+        <div class="py-2 row row-cols-5">
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>feliz</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>empolgado(a)</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>grato(a)</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>descontraído(a)</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>satisfeito(a)</div>
+        </div>
+        <div class="py-2 row row-cols-5">
+            <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>cansado(a)</div>
+            <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>incerto(a)</div>
+            <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>entediado(a)</div>
+            <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>ansioso(a)</div>
+            <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>com raiva</div>
+          </div>
+          <div class="py-2 row row-cols-3">
+            <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>estressado(a)</div>
+            <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>triste</div>
+            <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>desesperado(a)</div>
+          </div>
+      </div>
+
+      <div class="container text-center border p-2 my-2 ">
+        <h6>Sono</h6>
+        <div class="py-2 row row-cols-3">
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>bom sono</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>sono neutro</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>sono ruim</div>
+        </div>
+      </div>
+
+      <div class="container text-center border p-2 my-2 ">
+        <h6>Social</h6>
+        <div class="py-2 row row-cols-4">
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>família</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>amigos</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>encontro</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>festa</div>
+        </div>
+      </div>
+
+      <div class="container text-center border p-2 my-2 ">
+        <h6>Clima</h6>
+        <div class="py-2 row row-cols-5">
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>ensolarado</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>nublado</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>chuva</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>neve</div>
+          <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>calor</div>
+        </div>
+        <div class="py-2 row row-cols-2">
+            <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>tempestade</div>
+            <div class="container col"><button onclick="" class="btn btn-primary rounded-pill p-3" type="button"></button>vento</div>
+          </div>
+      </div>
+
+      <div class=" py-2 form-floating">
+        <label for="anotacao">Anotação</label>
+        <input type="text" class="form-control" id="floatingInput" name="anotacao" placeholder="Adicionar nota">
+      </div>
+
+    <div class="py-2 form-floating">
+        <label for="foto">Foto</label>
+        <input type="file" class="form-control" id="myFile" name="foto" accept="image/png, image/jpeg"  multiple>
+    </div>
+
+    <div class="py-2 form-floating">
+        <label for="audio">Foto</label>
+    </div>
+    <button class="btn btn-primary w-100 py-2" type="submit">Salvar</button>
+
+</form>
+
+</main>
+<footer class="text-center">
+  <div class="row align-items-center">
+    <div class="col nav-item">
+      <!-- <input class="nav-link" type="submit" value="Salvar"> -->
+    </div>
+  </div>
+</footer>
+
+<script src="scripts.js"></script>
+</html>

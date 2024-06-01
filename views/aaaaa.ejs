@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <title>Adicionar Humor</title>
+</head>
+
+<body>
+  <header>Meu Humor</header>
+
+  <main class="container">
+    <form action="/addHumor" method="post" enctype="multipart/form-data">
+
+      <div class="form-group">
+        <label for="dataDeHoje">Data de hoje</label>
+        <input type="date" class="form-control" id="dataDeHoje" name="data_hora_atual">
+      </div>
+
+      <h1 class="text-center mt-4">Como você está?</h1>
+
+      <div class="form-group">
+        <div class="center-content">
+          <button type="button" class="btn btn-humor excelente" data-humor="excelente">Excelente</button>
+          <button type="button" class="btn btn-humor bem" data-humor="bem">Bem</button>
+          <button type="button" class="btn btn-humor mais-ou-menos" data-humor="mais ou menos">Mais ou Menos</button>
+          <button type="button" class="btn btn-humor mal" data-humor="mal">Mal</button>
+          <button type="button" class="btn btn-humor horrivel" data-humor="horrível">Horrível</button>
+        </div>
+        <input type="hidden" name="avaliacao_humor" id="avaliacao_humor">
+      </div>
+
+      <div class="form-group">
+        <label>Emoções</label>
+        <div class="center-content">
+          <button type="button" class="btn btn-emocao feliz" data-emocao="feliz">Feliz</button>
+          <button type="button" class="btn btn-emocao empolgado" data-emocao="empolgado(a)">Empolgado(a)</button>
+          <button type="button" class="btn btn-emocao grato" data-emocao="grato(a)">Grato(a)</button>
+          <!-- Adicione outros botões de emoções conforme necessário -->
+        </div>
+        <input type="hidden" name="emocoes" id="emocoes">
+      </div>
+
+      <div class="form-group">
+        <label>Sono</label>
+        <div class="center-content">
+          <button type="button" class="btn btn-sono bom" data-sono="bom sono">Bom Sono</button>
+          <button type="button" class="btn btn-sono neutro" data-sono="sono neutro">Sono Neutro</button>
+          <button type="button" class="btn btn-sono ruim" data-sono="sono ruim">Sono Ruim</button>
+        </div>
+        <input type="hidden" name="sono" id="sono">
+      </div>
+
+      <div class="form-group">
+        <label>Social</label>
+        <div class="center-content">
+          <button type="button" class="btn btn-social familia" data-social="família">Família</button>
+          <button type="button" class="btn btn-social amigos" data-social="amigos">Amigos</button>
+          <!-- Adicione outros botões sociais conforme necessário -->
+        </div>
+        <input type="hidden" name="social" id="social">
+      </div>
+
+      <div class="form-group">
+        <label>Clima</label>
+        <div class="center-content">
+          <button type="button" class="btn btn-clima ensolarado" data-clima="ensolarado">Ensolarado</button>
+          <button type="button" class="btn btn-clima nublado" data-clima="nublado">Nublado</button>
+          <!-- Adicione outros botões de clima conforme necessário -->
+        </div>
+        <input type="hidden" name="clima" id="clima">
+      </div>
+
+      <div class="form-group">
+        <label for="anotacao">Anotação</label>
+        <textarea class="form-control" id="anotacao" name="anotacao" rows="3"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="foto">Foto</label>
+        <input type="file" class="form-control-file" id="foto" name="foto">
+      </div>
+
+      <div class="form-group text-center">
+        <button type="submit" class="btn btn-custom">Salvar</button>
+      </div>
+    </form>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col"><a class="nav-link text-white" href="/hoje">Hoje</a></div>
+        <div class="col"><a class="nav-link text-white" href="/estatisticas">Estatísticas</a></div>
+        <div class="col"><a class="nav-link text-white" href="/addHumor">+</a></div>
+        <div class="col"><a class="nav-link text-white" href="/calend
