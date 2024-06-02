@@ -8,54 +8,66 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adicionar Humor</title>
+    <title>Meu Humor - Cadastro</title>
+    <style>
+      main{
+        margin-top: 10%;
+      }
+    </style>
 </head>
 
-<header class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
-    <div class="container-fluid">
-      <svg class="bi me-2" width="40" height="32">LOGO DO APPP</svg>
-      <span class="fs-4">Meu Humor</span>
-      <div class="">
-        <ul class="navbar-nav me-auto mb-md-0"></ul>
-        <button type="button" class="btn btn-primary">Sign-up</button>
-      </div>
-    </div>
-</header>
-<main class="container">
+<body class="d-flex align-items-center py-5 bg-body-tertiary">
 
-<form class="position-relative bg-body" action="/signup" method="post">
+  <div class="container">
+    <header class="navbar navbar-expand-md fixed-top py-3 mb-5">
+      <div class="container-fluid flex-nowrap justify-content-between align-items-center">
+        <svg class="bi me-2" width="40" height="32">LOGO DO APPP</svg>
+        <h2>Meu Humor</h2>
+        <div class="">
+          <ul class="navbar-nav me-auto mb-md-0"></ul>
+          <button type="button" class="btn btn-outline-light"><a href="/login" class="nav-link">Login</a></button>
+        </div>
+      </div>
+  </header>
+  </div>
+
+  <main class="form-signin w-100">
+
+<form class="bg-body" action="/signup" method="post">
     <h1 class="h3 mb-3 fw-normal">Crie sua conta</h1>
 
     <div class="form-floating">
-        <label for="nome_usuario">Seu nome</label>
       <input type="text" class="form-control" id="floatingInput" name="nome_usuario" placeholder="Seu nome">
+      <label for="nome_usuario">Seu nome</label>
     </div>
     <div class="form-floating">
-        <label for="floatingInput">E-mail</label>
       <input type="email" class="form-control" id="floatingInput" name="email" placeholder="E-mail">
+      <label for="email">E-mail</label>
     </div>
     <div class="form-floating">
-        <label for="floatingPassword">Senha</label>
       <input type="password" class="form-control" id="floatingPassword" name="senha" placeholder="Senha">
+      <label for="senha">Senha</label>
     </div>
 
     <div class="form-check text-start my-3">
-      <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-      <label class="form-check-label" for="flexCheckDefault">
-        Lembrar de mim
-      </label>
+
     </div>
     <button class="btn btn-primary w-100 py-2" type="submit">Criar conta</button>
   </form>
 
 </main>
-<footer class="text-center">
-  <div class="row align-items-center">
-    <div class="col nav-item">
-      <!-- <input class="nav-link" type="submit" value="Salvar"> -->
-    </div>
+<body>
+  <div class="container">
+    <header class="navbar navbar-expand-md fixed-top py-3">
+      <div class="container-fluid flex-nowrap justify-content-between align-items-center">
+        <svg class="bi me-2" width="40" height="32">LOGO DO APPP</svg>
+        <h2>Meu Humor</h2>
+        <div class="">
+          <ul class="navbar-nav me-auto mb-md-0"></ul>
+          <button type="button" class="btn btn-outline-light"><a href="/signup" class="nav-link">Sign-up</a></button>
+        </div>
+      </div>
+  </header>
   </div>
-</footer>
 
-<script src="scripts.js"></script>
 </html>

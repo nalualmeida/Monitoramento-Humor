@@ -42,6 +42,11 @@ header, footer{
   box-sizing: border-box;
 }
 
+.selected {
+  background-color: #5a54d4 !important;
+  color: white !important;
+}
+
 .btn-group{
   display: flex;
   flex-direction: row;
@@ -53,10 +58,33 @@ header, footer{
 .btn-custom {
   background-color: transparent;
   color: black;
-  border: solid #5a54d437;
   padding: 1vh;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.btn-sessoes {
+  border: solid #5821c786;
+}
+
+.btn-excelente {
+  border: solid #43c72186;
+}
+
+.btn-bem {
+  border: solid #9bc72186;
+}
+
+.btn-mais {
+  border: solid #f0e62486;
+}
+
+.btn-mal {
+  border: solid #c7712186;
+}
+
+.btn-horrivel {
+  border: solid #c73a2186;
 }
 
 .btn-custom:hover {

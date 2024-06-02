@@ -17,62 +17,51 @@
 <header class="border-bottom py-3 fixed-top">
   <div class="row flex-nowrap justify-content-between align-items-center">
     <div class="text-center">
-      <a class="blog-header-logo text-white text-decoration-none" href="/inicioDashboard">Meu Humor</a>
+      <a class="blog-header-logo text-white text-decoration-none" href="/dashboard"><h2>Meu Humor</h2></a>
     </div>
   </div>
 </header>
 
-<!-- <div class="nav-scroller py-1 mb-3 border-bottom">
-  <nav class="nav nav-underline justify-content-between">
-    <a class="nav-item nav-link link-body-emphasis active" href="#">World</a>
-    <a class="nav-item nav-link link-body-emphasis" href="#">U.S.</a>
-    <a class="nav-item nav-link link-body-emphasis" href="#">Technology</a>
-    <a class="nav-item nav-link link-body-emphasis" href="#">Design</a>
-    <a class="nav-item nav-link link-body-emphasis" href="#">Culture</a>
-    <a class="nav-item nav-link link-body-emphasis" href="#">Business</a>
-    <a class="nav-item nav-link link-body-emphasis" href="#">Politics</a>
-    <a class="nav-item nav-link link-body-emphasis" href="#">Opinion</a>
-    <a class="nav-item nav-link link-body-emphasis" href="#">Science</a>
-    <a class="nav-item nav-link link-body-emphasis" href="#">Health</a>
-    <a class="nav-item nav-link link-body-emphasis" href="#">Style</a>
-    <a class="nav-item nav-link link-body-emphasis" href="#">Travel</a>
-  </nav>
-</div>
-</div> -->
-
 <main class="py-5">
   <form action="/addHumor" method="post" enctype="multipart/form-data" class="form">
-    <div class="pt-4 form-group text-center">
-        <input type="date" class="form-control" id="dataDeHoje" name="data_hora_atual">
+    <div class="pt-5 *mt-2 form-group text-center">
+        <input type="date" class="form-control" id="dataDeHoje" name="data_atual">
     </div>
 
     <div class="mood-buttons text-center">
-        <h2 class="form-heading">Como você está?</h2>
-        <div class="btn-group gap-3" role="group">
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">excelente</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">bem</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">mais ou menos</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">mal</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">horrível</button>
+      <h2 class="form-heading">Como você está?</h2>
+      <div class="btn-group gap-3" role="group">
+          <button onclick="selectMood(this)" class="btn-mood btn-excelente btn-custom rounded-pill px-3" type="button">excelente</button>
+          <button onclick="selectMood(this)" class="btn-mood btn-bem btn-custom rounded-pill px-3" type="button">bem</button>
+          <button onclick="selectMood(this)" class="btn-mood btn-mais btn-custom rounded-pill px-3" type="button">mais ou menos</button>
+          <button onclick="selectMood(this)" class="btn-mood btn-mal btn-custom rounded-pill px-3" type="button">mal</button>
+          <button onclick="selectMood(this)" class="btn-mood btn-horrivel btn-custom rounded-pill px-3" type="button">horrível</button>
         </div>
-    </div>
+  </div>
+
+  <!-- Campos ocultos para armazenar informações selecionadas -->
+  <input type="hidden" name="avaliacao_humor" id="avaliacao_humor">
+  <input type="hidden" name="emocoes" id="emocoes">
+  <input type="hidden" name="sono" id="sono">
+  <input type="hidden" name="social" id="social">
+  <input type="hidden" name="clima" id="clima">
 
     <div class="form-group text-center">
       <h2 class="form-heading">Emoções</h2>
       <div class="btn-group gap-3" role="group">
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">feliz</button>
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">empolgado(a)</button>
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">grato(a)</button>
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">descontraído(a)</button>
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">satisfeito(a)</button>
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">cansado(a)</button>
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">incerto(a)</button>
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">entediado(a)</button>
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">ansioso(a)</button>
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">com raiva</button>
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">estressado(a)</button>
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">triste</button>
-        <button onclick="" class="btn-custom rounded-pill px-3" type="button">desesperado(a)</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">feliz</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">empolgado(a)</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">grato(a)</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">descontraído(a)</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">satisfeito(a)</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">cansado(a)</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">incerto(a)</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">entediado(a)</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">ansioso(a)</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">com raiva</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">estressado(a)</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">triste</button>
+        <button onclick="toggleEmocoes(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">desesperado(a)</button>
       </div>
       </div>
   
@@ -80,33 +69,33 @@
     <div class="form-group text-center">
         <h2 class="form-heading">Sono</h2>
         <div class="btn-group gap-3" role="group">
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">bom sono</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">sono neutro</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">sono ruim</button>
+          <button onclick="selectSono(this)" class="btn-sono btn-sessoes btn-custom rounded-pill px-3" type="button">bom sono</button>
+          <button onclick="selectSono(this)" class="btn-sono btn-sessoes btn-custom rounded-pill px-3" type="button">sono neutro</button>
+          <button onclick="selectSono(this)" class="btn-sono btn-sessoes btn-custom rounded-pill px-3" type="button">sono ruim</button>
         </div>
     </div>
   
     <div class="form-group text-center">
         <h2 class="form-heading">Social</h2>
         <div class="btn-group gap-3" role="group">
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">família</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">amigos</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">encontro</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">festa</button>
+          <button onclick="toggleSocial(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">família</button>
+          <button onclick="toggleSocial(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">amigos</button>
+          <button onclick="toggleSocial(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">encontro</button>
+          <button onclick="toggleSocial(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">festa</button>
         </div>
     </div>
   
     <div class="form-group text-center">
         <h2 class="form-heading">Clima</h2>
         <div class="btn-group gap-3" role="group">
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">ensolarado</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">nublado</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">chuvoso</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">nevando</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">calor</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">frio</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">tempestade</button>
-          <button onclick="" class="btn-custom rounded-pill px-3" type="button">vento</button>
+          <button onclick="toggleClima(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">ensolarado</button>
+          <button onclick="toggleClima(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">nublado</button>
+          <button onclick="toggleClima(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">chuvoso</button>
+          <button onclick="toggleClima(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">nevando</button>
+          <button onclick="toggleClima(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">calor</button>
+          <button onclick="toggleClima(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">frio</button>
+          <button onclick="toggleClima(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">tempestade</button>
+          <button onclick="toggleClima(this)" class="btn-sessoes btn-custom rounded-pill px-3" type="button">vento</button>
         </div>
     </div>
 
@@ -124,7 +113,7 @@
         </div>
     </div>
 
-    <div class="form-group text-center">
+    <div class="form-group text-center mb-4">
         <h2 class="form-heading">Áudio</h2>
         <div>
             <input type="file" class="form-control" id="audio" name="audio">
@@ -145,8 +134,97 @@
 </div>
 
 
-<script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
 
+let selectedMood = "";
+  let selectedEmocoes = [];
+  let selectedSono = "";
+  let selectedSocial = [];
+  let selectedClima = [];
+
+  function selectMood(button) {
+    selectedMood = button.innerText;
+    document.getElementById("avaliacao_humor").value = selectedMood;
+    document.querySelectorAll('.btn-mood').forEach(btn => btn.classList.remove('selected'));
+    button.classList.add('selected');
+  }
+
+  function toggleEmocoes(button) {
+    const emocao = button.innerText;
+    const index = selectedEmocoes.indexOf(emocao);
+    if (index > -1) {
+      selectedEmocoes.splice(index, 1);
+      button.classList.remove('selected');
+    } else {
+      selectedEmocoes.push(emocao);
+      button.classList.add('selected');
+    }
+    document.getElementById("emocoes").value = selectedEmocoes.join(', ');
+  }
+
+  function selectSono(button) {
+    selectedSono = button.innerText;
+    document.getElementById("sono").value = selectedSono;
+    document.querySelectorAll('.btn-sono').forEach(btn => btn.classList.remove('selected'));
+    button.classList.add('selected');
+  }
+
+  function toggleSocial(button) {
+    const social = button.innerText;
+    const index = selectedSocial.indexOf(social);
+    if (index > -1) {
+      selectedSocial.splice(index, 1);
+      button.classList.remove('selected');
+    } else {
+      selectedSocial.push(social);
+      button.classList.add('selected');
+    }
+    document.getElementById("social").value = selectedSocial.join(', ');
+  }
+
+  function toggleClima(button) {
+    const clima = button.innerText;
+    const index = selectedClima.indexOf(clima);
+    if (index > -1) {
+      selectedClima.splice(index, 1);
+      button.classList.remove('selected');
+    } else {
+      selectedClima.push(clima);
+      button.classList.add('selected');
+    }
+    document.getElementById("clima").value = selectedClima.join(', ');
+  }
+
+  // function selectMood(button) {
+  //   console.log("Botão clicado:", button.textContent);
+  //   var buttonsMood = document.querySelectorAll('.btn-mood');
+  //   buttonsMood.forEach(function(btn) {
+  //     btn.classList.remove('selected');
+  //   });
+  //   button.classList.add('selected');
+  // }
+
+  // function toggleEmocoes(button) {
+  //           button.classList.toggle('selected');
+  //       }
+
+  // function selectSono(button) {
+  //   console.log("Botão clicado:", button.textContent);
+  //   var buttonsSono = document.querySelectorAll('.btn-sono');
+  //   buttonsSono.forEach(function(btn) {
+  //     btn.classList.remove('selected');
+  //   });
+  //   button.classList.add('selected');
+  // }
+
+  // function toggleSocial(button) {
+  //           button.classList.toggle('selected');
+  //       }
+
+  // function toggleClima(button) {
+  //           button.classList.toggle('selected');
+  //       }
+</script>
   
 </body>
 </html>
