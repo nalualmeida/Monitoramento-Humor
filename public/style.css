@@ -87,6 +87,10 @@ header, footer{
   border: solid #c73a2186;
 }
 
+.btn-audio{
+  border: solid #de1212af;
+}
+
 .btn-custom:hover {
   background-color: #5a54d4;
 }

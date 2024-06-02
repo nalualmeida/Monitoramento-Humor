@@ -23,9 +23,9 @@
 </header>
 
 <main class="py-5">
-  <form action="/addHumor" method="post" enctype="multipart/form-data" class="form">
+  <form id="humorForm" action="/addHumor" method="post" enctype="multipart/form-data" class="form">
     <div class="pt-5 *mt-2 form-group text-center">
-        <input type="date" class="form-control" id="dataDeHoje" name="data_atual">
+        <input type="date" class="form-control" id="data_atual" name="data_atual" required>
     </div>
 
     <div class="mood-buttons text-center">
@@ -114,10 +114,18 @@
     </div>
 
     <div class="form-group text-center mb-4">
-        <h2 class="form-heading">Áudio</h2>
-        <div>
-            <input type="file" class="form-control" id="audio" name="audio">
-        </div>
+      <h2 class="form-heading">Áudio</h2>
+      <!-- <div>
+          <button type="button" id="recordButton">Gravar</button>
+          <button type="button" id="stopButton" disabled>Parar</button>
+          <p id="recordingStatus"></p>
+            <input type="hidden" class="form-control" id="audio" name="audio">
+        </div> -->
+      <label for="audio">Gravador de Voz:</label><br>
+      <button class="btn-audio btn-custom rounded-pill px-3" type="button" id="recordButton">Gravar</button>
+      <button class="btn-audio btn-custom rounded-pill px-3" type="button" id="stopButton" disabled>Parar</button>
+      <p id="recordingStatus"></p>
+      <input type="file" id="audioInput" name="audio" accept="audio/*" style="display:none;">
     </div>
 
     <div class="container">
@@ -136,7 +144,37 @@
 
 <script>
 
-let selectedMood = "";
+document.getElementById('humorForm').addEventListener('submit', function(event) {
+    var dataAtual = document.getElementById('data_atual').value;
+    // var avaliacaoHumor = document.querySelector('input[name="avaliacao_humor"]:checked');
+
+    if (!dataAtual) {
+        alert("Por favor, selecione uma data para o registro.");
+        event.preventDefault();
+    }
+
+    // if (!avaliacaoHumor) {
+    //     alert("Por favor, nos diga como você está!");
+    //     event.preventDefault();
+    // }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    var dataAtual = document.getElementById('data_atual');
+    var hoje = new Date();
+    
+    var dia = ("0" + hoje.getDate()).slice(-2);
+    var mes = ("0" + (hoje.getMonth() + 1)).slice(-2);
+    var ano = hoje.getFullYear();
+    
+    var dataFormatada = `${ano}-${mes}-${dia}`;
+    dataAtual.value = dataFormatada;
+    
+    // Definir o atributo max para o dia atual
+    dataAtual.setAttribute('max', dataFormatada);
+});
+
+  let selectedMood = "";
   let selectedEmocoes = [];
   let selectedSono = "";
   let selectedSocial = [];
@@ -194,6 +232,46 @@ let selectedMood = "";
     }
     document.getElementById("clima").value = selectedClima.join(', ');
   }
+
+  let mediaRecorder;
+    let audioChunks = [];
+
+    const recordButton = document.getElementById('recordButton');
+    const stopButton = document.getElementById('stopButton');
+    const audioInput = document.getElementById('audioInput');
+    const recordingStatus = document.getElementById('recordingStatus');
+
+    recordButton.addEventListener('click', async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.start();
+
+        mediaRecorder.addEventListener('dataavailable', event => {
+            audioChunks.push(event.data);
+        });
+
+        mediaRecorder.addEventListener('stop', () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audioFile = new File([audioBlob], 'recording.wav', { type: 'audio/wav' });
+
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(audioFile);
+            audioInput.files = dataTransfer.files;
+        });
+
+        recordButton.disabled = true;
+        stopButton.disabled = false;
+        recordingStatus.textContent = 'Gravando...';
+    });
+
+    stopButton.addEventListener('click', () => {
+        mediaRecorder.stop();
+        recordButton.disabled = false;
+        stopButton.disabled = true;
+        recordingStatus.textContent = 'Gravação finalizada.';
+    });
+
 
   // function selectMood(button) {
   //   console.log("Botão clicado:", button.textContent);
