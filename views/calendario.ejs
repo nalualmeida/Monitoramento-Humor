@@ -29,7 +29,7 @@
         <h2>Meu Humor</h2>
         <div class="">
           <ul class="navbar-nav me-auto mb-md-0"></ul>
-          <button type="button" class="btn btn-outline-light"><a href="#" class="nav-link">Config</a></button>
+          <button type="button" class="btn btn-outline-light" onclick="confirmLogout()">Sair</button>
         </div>
       </div>
   </header>
@@ -64,36 +64,7 @@
   </div>
 </footer>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      events: async function(fetchInfo, successCallback, failureCallback) {
-        try {
-          const response = await axios.get('/humor-dados', {
-            params: {
-              startDate: fetchInfo.startStr,
-              endDate: fetchInfo.endStr
-            }
-          });
-
-          const events = response.data.map(entry => ({
-            title: `Humor: ${entry.avaliacao_humor}`,
-            start: entry.data_atual,
-            allDay: true
-          }));
-
-          successCallback(events);
-        } catch (error) {
-          failureCallback(error);
-        }
-      }
-    });
-
-    calendar.render();
-  });
-</script>
+<script src="scripts.js"></script>
 
 </body>
 

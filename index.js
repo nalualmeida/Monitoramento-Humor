@@ -135,6 +135,16 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.get("/logout", (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error("Erro ao encerrar sessão:", err);
+      return res.status(500).send("Erro ao encerrar sessão");
+    }
+    res.redirect("/login");
+  });
+});
+
 app.get("/dashboard", requireAuth, async (req, res) => {
   const userId = req.session.userId;
 
@@ -231,6 +241,15 @@ app.post("/addHumor", requireAuth, upload.fields([{ name: 'foto' }, { name: 'aud
     return res.status(401).send('Usuário não autenticado');
   }
 
+  const existingRecord = await dbGet(
+    "SELECT * FROM addHumor WHERE id_usuario = ? AND data_atual = ?",
+    [userId, data_atual]
+  );
+
+  if (existingRecord) {
+    return res.status(400).send("Já existe um registro para esta data");
+  }
+
   // Validação dos campos obrigatórios
   if (!data_atual || !avaliacao_humor) {
     return res.status(400).send('Data atual e avaliação de humor são obrigatórios.');
@@ -248,6 +267,104 @@ app.post("/addHumor", requireAuth, upload.fields([{ name: 'foto' }, { name: 'aud
     console.error('Erro ao salvar humor:', err.message);
     res.status(500).send('Erro ao salvar humor');
   }
+});
+
+
+// Rota para exibir o formulário de edição usando a mesma página de adição
+app.get("/editHumor/:id", async (req, res) => {
+  console.log("A rota /editHumor/:id foi acessada."); 
+  const userId = req.session.userId;
+  const registroId = req.params.id;
+
+  if (!userId) {
+    return res.redirect("/login");
+  }
+
+  try {
+    const registro = await dbGet(
+      "SELECT * FROM addHumor WHERE id_registro = ?",
+      [registroId]
+    );
+    console.log("Registro encontrado:", registro)
+
+    if (registro) {
+      res.render("editHumor", { registro });
+    } else {
+      res.status(404).send("Registro não encontrado");
+    }
+  } catch (err) {
+    console.error("Erro ao obter registro:", err.message);
+    res.status(500).send("Erro ao carregar a página de edição");
+  }
+});
+
+// Rota para processar a edição
+app.post("/editHumor/:id", async (req, res) => {
+  const userId = req.session.userId;
+  const registroId = req.params.id;
+  const { data_atual, avaliacao_humor, emocoes, sono, social, clima, anotacao } = req.body;
+
+  console.log('Dados recebidos:', { data_atual, avaliacao_humor, emocoes, sono, social, clima, anotacao });
+
+  if (!userId) {
+    return res.status(401).send('Usuário não autenticado');
+  }
+
+  try {
+    await dbRun(
+      `UPDATE addHumor SET data_atual = ?, avaliacao_humor = ?, emocoes = ?, sono = ?, social = ?, clima = ?, anotacao = ? WHERE id_registro = ?`,
+      [data_atual, avaliacao_humor, emocoes, sono, social, clima, anotacao, registroId]
+    );
+
+    res.redirect("/dashboard");
+  } catch (err) {
+    console.error("Erro ao editar registro:", err.message);
+    res.status(500).send("Erro ao editar o registro");
+  }
+});
+
+// Rota para excluir o registro
+app.post("/deleteHumor/:id", async (req, res) => {
+  const userId = req.session.userId;
+  const registroId = req.params.id;
+
+  if (!userId) {
+    return res.redirect("/login");
+  }
+
+  try {
+    const registro = await dbGet(
+      "SELECT * FROM addHumor WHERE id_registro = ?",
+      [registroId]
+    );
+
+    if (registro.foto) {
+      const fotoPath = path.join(__dirname, 'uploads', registro.foto);
+      fs.unlink(fotoPath, (err) => {
+        if (err) console.error("Erro ao excluir arquivo de foto:", err.message);
+      });
+    }
+    if (registro.audio) {
+      const audioPath = path.join(__dirname, 'uploads', registro.audio);
+      fs.unlink(audioPath, (err) => {
+        if (err) console.error("Erro ao excluir arquivo de áudio:", err.message);
+      });
+    }
+
+    await dbRun(
+      "DELETE FROM addHumor WHERE id_registro = ?",
+      [registroId]
+    );
+  
+    res.redirect("/dashboard");
+  } catch (err) {
+    console.error("Erro ao excluir registro:", err.message);
+    res.status(500).send("Erro ao excluir o registro");
+  }
+});
+
+app.get("/editHumor", requireAuth, (req, res) => {
+  res.render("editHumor.ejs");
 });
 
 app.get("/calendario", requireAuth, (req, res) => {

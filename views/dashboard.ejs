@@ -47,7 +47,7 @@
       <h2>Meu Humor</h2>
       <div class="">
         <ul class="navbar-nav me-auto mb-md-0"></ul>
-        <button type="button" class="btn btn-outline-light"><a href="#" class="nav-link">Config</a></button>
+        <button type="button" class="btn btn-outline-light" onclick="confirmLogout()">Sair</button>
       </div>
     </div>
   </header>
@@ -82,8 +82,10 @@
                   <% } %>
                 </div>
                 <div class="card-footer">
-                  <button class="btn btn-warning btn-edit" onclick="window.location.href='/editHumor/<%= registro.id %>'">Editar</button>
-                  <button class="btn btn-danger btn-delete" onclick="window.location.href='/deleteHumor/<%= registro.id %>'">Excluir</button>
+                  <button class="btn btn-warning btn-edit" onclick="window.location.href='/editHumor/<%= registro.id_registro %>'">Editar</button>
+                  <form action="/deleteHumor/<%= registro.id_registro %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este registro?');">
+                    <button type="submit" class="btn btn-danger btn-delete">Excluir</button>
+                  </form>
                 </div>
               </li>
             <% }) %>
@@ -151,6 +153,8 @@
     </div>
   </div>
 </footer>
+
+<script src="scripts.js"></script>
 
 </body>
 </html>
