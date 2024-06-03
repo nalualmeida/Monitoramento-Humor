@@ -135,35 +135,3 @@ document.addEventListener('DOMContentLoaded', function() {
         stopButton.disabled = true;
         recordingStatus.textContent = 'Gravação finalizada.';
     });
-
-    // CALENDARIO
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const calendarEl = document.getElementById('calendar');
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          events: async function(fetchInfo, successCallback, failureCallback) {
-            try {
-              const response = await axios.get('/humor-dados', {
-                params: {
-                  startDate: fetchInfo.startStr,
-                  endDate: fetchInfo.endStr
-                }
-              });
-    
-              const events = response.data.map(entry => ({
-                title: `Humor: ${entry.avaliacao_humor}`,
-                start: entry.data_atual,
-                allDay: true
-              }));
-    
-              successCallback(events);
-            } catch (error) {
-              failureCallback(error);
-            }
-          }
-        });
-    
-        calendar.render();
-      });
-

@@ -1,6 +1,10 @@
+html {
+  background-color: #c3e1fff4;
+ 
+}
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
+  background-color: #c3e1fff4;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -10,10 +14,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #c3e1fff4;
 }
 
 main{
   margin: 0;
+  background-color: #c3e1fff4;
+
 }
 
 header, footer{
@@ -56,7 +63,7 @@ header, footer{
 }
 
 .btn-custom {
-  background-color: transparent;
+  background-color: rgba(243, 248, 255, 0.983);
   color: black;
   padding: 1vh;
   cursor: pointer;
