@@ -147,6 +147,7 @@ app.get("/logout", (req, res) => {
 
 app.get("/dashboard", requireAuth, async (req, res) => {
   const userId = req.session.userId;
+  const user = await dbGet('SELECT nome_usuario, email FROM users WHERE email = ?', [userId]);
 
   if (!userId) {
       return res.redirect("/login");
@@ -159,7 +160,7 @@ app.get("/dashboard", requireAuth, async (req, res) => {
     );
 
       if (registros.length > 0) {
-          res.render("dashboard", { registros });
+          res.render("dashboard", { user: user, registros: registros });
       } else {
           res.render("inicioDashboard");
       }
