@@ -76,6 +76,7 @@ const dbRun = promisify(db.run).bind(db);
 
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.render("index.ejs");
@@ -178,6 +179,142 @@ app.get("/estatisticas", requireAuth, (req, res) => {
   res.render("estatisticas.ejs");
 });
 
+// app.get("/getMoodData", requireAuth, async (req, res) => {
+//   const userId = req.session.userId;
+
+//   try {
+//     const registros = await dbAll(
+//       "SELECT data_atual, avaliacao_humor FROM addHumor WHERE id_usuario = ? ORDER BY data_atual",
+//       [userId]
+//     );
+
+//     if (registros.length === 0) {
+//       return res.json({ anual: { labels: [], moodValues: [] }, mensal: { labels: [], moodValues: [] }, contagem: [] });
+//     }
+
+//     const moodData = registros.reduce((acc, registro) => {
+//       const data = new Date(registro.data_atual);
+//       const year = data.getFullYear();
+//       const monthDB = data.getMonth();
+//       const day = data.getDate();
+//       const mood = registro.avaliacao_humor;
+      
+//       // Agrupando dados por mês para a visualização anual
+//       if (!acc.anual[monthDB]) {
+//         acc.anual[monthDB] = [];
+//       }
+//       acc.anual[monthDB].push({ day, mood });
+
+//       // Agrupando dados por dia para a visualização mensal
+//       const dateString = data.toLocaleDateString();
+//       if (!acc.mensal[dateString]) {
+//         acc.mensal[dateString] = [];
+//       }
+//       acc.mensal[dateString].push(mood);
+
+//       // Calculando contagem de humores
+//       acc.contagem[mood] = (acc.contagem[mood] || 0) + 1;
+
+//       return acc;
+//     }, { anual: {}, mensal: {}, contagem: {} });
+
+//     const mesesDoAno = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+//     const labelsAnual = mesesDoAno.map((monthAbbrev, index) => {
+//       const monthName = new Date(0, index).toLocaleString('default', { month: 'short' });
+//       return monthName.charAt(0).toUpperCase();;
+//   });
+//     const moodValuesAnual = Object.values(moodData.anual).map(monthData => {
+//       const moodSum = monthData.reduce((sum, { mood }) => sum + (mood === 'excelente' ? 5 : mood === 'bem' ? 4 : mood === 'mais ou menos' ? 3 : mood === 'mal' ? 2 : 1), 0);
+//       return moodSum / monthData.length;
+//     });
+
+//     const labelsMensal = Object.keys(moodData.mensal);
+//     const moodValuesMensal = Object.values(moodData.mensal).map(dayData => {
+//       const moodSum = dayData.reduce((sum, mood) => sum + (mood === 'excelente' ? 5 : mood === 'bem' ? 4 : mood === 'mais ou menos' ? 3 : mood === 'mal' ? 2 : 1), 0);
+//       return moodSum / dayData.length;
+//     });
+
+//     res.json({
+//       anual: { labels: labelsAnual, moodValues: moodValuesAnual },
+//       mensal: { labels: labelsMensal, moodValues: moodValuesMensal },
+//       contagem: Object.values(moodData.contagem),
+//       streak: 0 // Não está claro como calcular o streak, pode precisar ser revisado
+//     });
+//   } catch (err) {
+//     console.error('Erro ao obter dados de humor:', err.message);
+//     res.status(500).send('Erro ao obter dados de humor');
+//   }
+// });
+
+app.get("/getMoodData", requireAuth, async (req, res) => {
+  const userId = req.session.userId;
+
+  try {
+    const registros = await dbAll(
+      "SELECT data_atual, avaliacao_humor FROM addHumor WHERE id_usuario = ? ORDER BY data_atual",
+      [userId]
+    );
+
+    if (registros.length === 0) {
+      return res.json({ anual: { labels: [], moodValues: [] }, contagem: {} });
+    }
+
+    // Inicializar moodData com todos os meses do ano
+    const moodData = {
+      anual: Array.from({ length: 12 }, () => []),
+      contagem: {}
+    };
+
+    registros.forEach(registro => {
+      const data = new Date(registro.data_atual);
+      const monthDB = data.getMonth();
+      const mood = registro.avaliacao_humor;
+
+      // Adicionar registro ao mês correspondente
+      moodData.anual[monthDB].push(mood);
+
+      // Calcular contagem de humores
+      moodData.contagem[mood] = (moodData.contagem[mood] || 0) + 1;
+    });
+
+    const mesesDoAno = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    const labelsAnual = mesesDoAno.map((monthAbbrev, index) => {
+      const monthName = new Date(0, index).toLocaleString('default', { month: 'short' });
+      return monthName.charAt(0).toUpperCase();
+    });
+
+    const reverseMoodMap = {
+      'excelente': 5,
+      'bem': 4,
+      'mais ou menos': 3,
+      'mal': 2,
+      'horrível': 1
+    };
+
+    const moodValuesAnual = moodData.anual.map(monthData => {
+      if (monthData.length === 0) {
+        return 0; // Sem registros para este mês
+      }
+
+      const moodSum = monthData.reduce((sum, mood) => {
+        return sum + reverseMoodMap[mood];
+      }, 0);
+
+      return moodSum / monthData.length;
+    });
+
+    res.json({
+      anual: { labels: labelsAnual, moodValues: moodValuesAnual },
+      contagem: moodData.contagem,
+      streak: 0 // Não sei como calcular
+    });
+  } catch (err) {
+    console.error('Erro ao obter dados de humor:', err.message);
+    res.status(500).send('Erro ao obter dados de humor');
+  }
+});
+
+
 app.get("/addHumor", requireAuth, (req, res) => {
   res.render("addHumor.ejs");
 });
@@ -232,7 +369,6 @@ app.get("/addHumor", requireAuth, (req, res) => {
 // });
 
 app.post("/addHumor", requireAuth, upload.fields([{ name: 'foto' }, { name: 'audio' }]), async (req, res) => {
-  console.log(req.files);
   const { data_atual, avaliacao_humor, emocoes, sono, social, clima, anotacao } = req.body;
   const foto = req.files['foto'] ? req.files['foto'][0].filename : null;
   const audio = req.files['audio'] ? req.files['audio'][0].filename : null;
@@ -270,8 +406,10 @@ app.post("/addHumor", requireAuth, upload.fields([{ name: 'foto' }, { name: 'aud
   }
 });
 
+app.get("/editHumor", requireAuth, (req, res) => {
+  res.render("editHumor.ejs");
+});
 
-// Rota para exibir o formulário de edição usando a mesma página de adição
 app.get("/editHumor/:id", async (req, res) => {
   console.log("A rota /editHumor/:id foi acessada."); 
   const userId = req.session.userId;
@@ -300,10 +438,10 @@ app.get("/editHumor/:id", async (req, res) => {
 });
 
 // Rota para processar a edição
-app.post("/editHumor/:id", async (req, res) => {
+app.post("/editHumor/:id", requireAuth, upload.fields([{ name: 'foto' }, { name: 'audio' }]), async (req, res) => {
+  const { data_atual, avaliacao_humor, emocoes, sono, social, clima, anotacao } = req.body;
   const userId = req.session.userId;
   const registroId = req.params.id;
-  const { data_atual, avaliacao_humor, emocoes, sono, social, clima, anotacao } = req.body;
 
   console.log('Dados recebidos:', { data_atual, avaliacao_humor, emocoes, sono, social, clima, anotacao });
 
@@ -311,10 +449,26 @@ app.post("/editHumor/:id", async (req, res) => {
     return res.status(401).send('Usuário não autenticado');
   }
 
+  const dataAtual = data_atual ? new Date(data_atual).toISOString().split('T')[0] : null;
+
+  const existingRecord = await dbGet(
+    "SELECT * FROM addHumor WHERE id_registro != ? AND id_usuario = ? AND data_atual = ?",
+    [registroId, userId, data_atual]
+  );
+
+  if (existingRecord) {
+    return res.status(400).send("Já existe um registro para esta data");
+  }
+
+  // Validação dos campos obrigatórios
+  if (!data_atual || !avaliacao_humor) {
+    return res.status(400).send('Data atual e avaliação de humor são obrigatórios.');
+  }
+
   try {
     await dbRun(
       `UPDATE addHumor SET data_atual = ?, avaliacao_humor = ?, emocoes = ?, sono = ?, social = ?, clima = ?, anotacao = ? WHERE id_registro = ?`,
-      [data_atual, avaliacao_humor, emocoes, sono, social, clima, anotacao, registroId]
+      [dataAtual, avaliacao_humor, emocoes, sono, social, clima, anotacao, registroId]
     );
 
     res.redirect("/dashboard");
@@ -362,10 +516,6 @@ app.post("/deleteHumor/:id", async (req, res) => {
     console.error("Erro ao excluir registro:", err.message);
     res.status(500).send("Erro ao excluir o registro");
   }
-});
-
-app.get("/editHumor", requireAuth, (req, res) => {
-  res.render("editHumor.ejs");
 });
 
 app.get("/calendario", requireAuth, (req, res) => {

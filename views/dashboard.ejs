@@ -37,6 +37,14 @@
     .btn-edit, .btn-delete {
       margin-top: 10px;
     }
+    .w-img {
+      width: 50%;
+      transition: width 0.3s ease;
+      margin-bottom: 3%;
+    }
+    .w-img:hover {
+      width: 100%;
+    }
   </style>
 </head>
 
@@ -65,10 +73,10 @@
 </div>
 
 <main class="py-5">
-  <div class="mt-5 pt-5 text-center">
+  <div class="mt-5 pt-2 text-center">
     <div class="position-relative text-center text-muted">
       <h1 class="text-body-emphasis">Seus registros de humor</h1>
-      <div class="col-lg-6 mx-auto mb-5 pb-2">
+      <div class="px-5 col-lg-6 mx-auto mb-5 pb-4">
         <% if (registros.length > 0) { %>
           <ul class="list-group">
             <% registros.forEach(registro => { %>
@@ -76,22 +84,34 @@
                 <div class="card-header">
                   <%= registro.data_atual %> - <%= registro.avaliacao_humor %>
                 </div>
-                <div class="card-body">
-                  <p><strong>Emoções:</strong> <%= registro.emocoes %></p>
-                  <p><strong>Sono:</strong> <%= registro.sono %></p>
-                  <p><strong>Social:</strong> <%= registro.social %></p>
-                  <p><strong>Clima:</strong> <%= registro.clima %></p>
-                  <p><strong>Anotação:</strong> <%= registro.anotacao %></p>
-                  <% if (registro.foto) { %>
-                    <img src="/uploads/<%= registro.foto %>" alt="Foto do registro" width="100"><br>
+                <% if (registro.emocoes || registro.sono || registro.social || registro.clima || registro.anotacao || registro.foto || registro.audio) { %>
+                  <div class="card-body">
+                    <% if (registro.emocoes) { %>
+                      <p><strong>Emoções:</strong> <%= registro.emocoes %></p>
+                    <% } %>
+                    <% if (registro.sono) { %>
+                      <p><strong>Sono:</strong> <%= registro.sono %></p>
+                    <% } %>
+                    <% if (registro.social) { %>
+                      <p><strong>Social:</strong> <%= registro.social %></p>
+                    <% } %>
+                    <% if (registro.clima) { %>
+                      <p><strong>Clima:</strong> <%= registro.clima %></p>
+                    <% } %>
+                    <% if (registro.anotacao) { %>
+                      <p><strong>Anotação:</strong> <%= registro.anotacao %></p>
+                    <% } %>
+                    <% if (registro.foto) { %>
+                      <img class="w-img" src="/uploads/<%= registro.foto %>" alt="Foto do registro" width="100"><br>
+                    <% } %>
+                    <% if (registro.audio) { %>
+                      <audio class="w-100" controls>
+                        <source src="/uploads/<%= registro.audio %>" type="audio/mpeg">
+                        Seu navegador não suporta o elemento de áudio.
+                      </audio><br>
+                    <% } %>
+                  </div>
                   <% } %>
-                  <% if (registro.audio) { %>
-                    <audio controls>
-                      <source src="/uploads/<%= registro.audio %>" type="audio/mpeg">
-                      Seu navegador não suporta o elemento de áudio.
-                    </audio><br>
-                  <% } %>
-                </div>
                 <div class="card-footer">
                   <button class="btn btn-warning btn-edit" onclick="window.location.href='/editHumor/<%= registro.id_registro %>'">Editar</button>
                   <form action="/deleteHumor/<%= registro.id_registro %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este registro?');">
