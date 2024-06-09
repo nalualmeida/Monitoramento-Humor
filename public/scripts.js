@@ -135,3 +135,4 @@ document.addEventListener('DOMContentLoaded', function() {
         stopButton.disabled = true;
         recordingStatus.textContent = 'Gravação finalizada.';
     });
+

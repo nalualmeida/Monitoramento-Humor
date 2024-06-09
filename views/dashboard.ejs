@@ -45,6 +45,9 @@
     .w-img:hover {
       width: 100%;
     }
+    .config {
+      width: auto;
+    }
   </style>
 </head>
 
@@ -57,10 +60,11 @@
         <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           Config.
         </button>
-        <ul class="dropdown-menu">
-          <li>Nome: <%= user.nome_usuario %></li>
-          <li>E-mail: <%= user.email %></li>
-          <li></li>
+        <ul class="config dropdown-menu">
+          <li><a class="dropdown-item" href="#" aria-disabled="true">Nome: <%= user.nome_usuario %></a></li>
+          <li><a class="dropdown-item" href="#" aria-disabled="true">E-mail: <%= user.email %></a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/alterarSenha">Alterar senha</a></li>
         </ul>
       </div>
       <h2>Meu Humor</h2>
