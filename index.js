@@ -179,81 +179,215 @@ app.get("/estatisticas", requireAuth, (req, res) => {
   res.render("estatisticas.ejs");
 });
 
-// app.get("/getMoodData", requireAuth, async (req, res) => {
+app.get("/getMonthlyData", requireAuth, async (req, res) => {
+  const userId = req.session.userId;
+  const year = parseInt(req.query.year);
+  const month = parseInt(req.query.month);
+
+  function formatMonth(month) {
+    return month < 10 ? '0' + month : '' + month;
+  }
+
+  const formattedMonth = formatMonth(month + 1);
+
+  try {
+    const startDate = `${year}-${formattedMonth}-01`;
+    const endDate = `${year}-${formattedMonth}-31`;
+
+    const registros = await dbAll(
+      "SELECT data_atual, avaliacao_humor FROM addHumor WHERE id_usuario = ? AND data_atual BETWEEN ? AND ? ORDER BY data_atual",
+      [userId, startDate, endDate]
+    );
+
+    console.log(registros)
+
+    if (registros.length === 0) {
+      return res.json({ mensal: { labels: [], moodValues: [] }, contagem: {} });
+    }
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const diasComRegistros = registros.map(registro => {
+      const data = new Date(registro.data_atual);
+      let dayDB = data.getDate() + 1;
+      if (dayDB > 31) {
+        dayDB = 1;
+      }
+      return dayDB;
+    }).filter((value, index, self) => self.indexOf(value) === index);
+    console.log('Dias com registros:', diasComRegistros);    
+
+    const labelsMensal = diasComRegistros.map(day => {
+      return (day).toLocaleString('default', { day: '2-digit' });
+    });
+
+    console.log('Etiquetas mensais:', labelsMensal);
+
+    const moodData = {
+      mensal: Array.from({ length: daysInMonth + 1 }, () => []),
+      contagem: {}
+    };
+
+    registros.forEach(registro => {
+      const data = new Date(registro.data_atual);
+      let dayCalc = data.getDate() + 1;
+      if (dayCalc > 31) {
+        dayCalc = 1;
+      }
+      const day = dayCalc;
+      console.log(day)
+    
+      if (day >= 1 && day <= daysInMonth) {
+        const mood = registro.avaliacao_humor;
+        moodData.mensal[day].push(mood);
+    
+        moodData.contagem[mood] = (moodData.contagem[mood] || 0) + 1;
+      }
+    });
+    
+
+    const reverseMoodMap = {
+      'excelente': 5,
+      'bem': 4,
+      'mais ou menos': 3,
+      'mal': 2,
+      'horrível': 1,
+      '': 0
+    };
+
+    const moodValuesMensal = diasComRegistros.map(dayIndex => {
+      const dayData = moodData.mensal[dayIndex];
+      console.log(dayIndex, moodData.mensal[dayIndex])
+      if (dayData.length === 0) {
+        return 0; // Sem registros para este dia
+      }
+
+      const moodSum = dayData.reduce((sum, mood) => {
+        return sum + reverseMoodMap[mood];
+      }, 0);
+
+      return moodSum / dayData.length;
+    });
+
+    res.json({ mensal: { labels: labelsMensal, moodValues: moodValuesMensal }, contagem: moodData.contagem });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erro ao buscar dados mensais");
+  }
+});
+
+// app.get("/getMonthlyData", requireAuth, async (req, res) => {
 //   const userId = req.session.userId;
+//   const year = parseInt(req.query.year); // Convertendo para número inteiro
+//   const month = parseInt(req.query.month);
+
+//   function formatMonth(month) {
+//     return month < 10 ? '0' + month : '' + month;
+//   }
+//   // Obtém o mês formatado
+//   const formattedMonth = formatMonth(month + 1);
 
 //   try {
+//     console.log('Ano:', year, 'Mês:', formattedMonth);
+  
+//     // Formatar a data para o formato 'YYYY-MM-DD'
+//     const startDate = `${year}-${formattedMonth}-01`;
+//     const endDate = `${year}-${formattedMonth}-31`; // Assumindo que o mês máximo é 31
+  
 //     const registros = await dbAll(
-//       "SELECT data_atual, avaliacao_humor FROM addHumor WHERE id_usuario = ? ORDER BY data_atual",
-//       [userId]
+//       "SELECT data_atual, avaliacao_humor FROM addHumor WHERE id_usuario = ? AND data_atual BETWEEN ? AND ? ORDER BY data_atual",
+//       [userId, startDate, endDate]
 //     );
+  
+//     console.log('Registros:', registros);
 
 //     if (registros.length === 0) {
-//       return res.json({ anual: { labels: [], moodValues: [] }, mensal: { labels: [], moodValues: [] }, contagem: [] });
+//       return res.json({ mensal: { labels: [], moodValues: [] }, contagem: {} });
 //     }
 
-//     const moodData = registros.reduce((acc, registro) => {
+//     // Inicializar moodData com todos os meses do ano
+//     const moodData = {
+//       mensal: Array.from({ length: 31 }, () => []),
+//       contagem: {}
+//     };
+
+//     registros.forEach(registro => {
 //       const data = new Date(registro.data_atual);
-//       const year = data.getFullYear();
 //       const monthDB = data.getMonth();
-//       const day = data.getDate();
 //       const mood = registro.avaliacao_humor;
-      
-//       // Agrupando dados por mês para a visualização anual
-//       if (!acc.anual[monthDB]) {
-//         acc.anual[monthDB] = [];
-//       }
-//       acc.anual[monthDB].push({ day, mood });
-
-//       // Agrupando dados por dia para a visualização mensal
-//       const dateString = data.toLocaleDateString();
-//       if (!acc.mensal[dateString]) {
-//         acc.mensal[dateString] = [];
-//       }
-//       acc.mensal[dateString].push(mood);
-
-//       // Calculando contagem de humores
-//       acc.contagem[mood] = (acc.contagem[mood] || 0) + 1;
-
-//       return acc;
-//     }, { anual: {}, mensal: {}, contagem: {} });
-
-//     const mesesDoAno = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-//     const labelsAnual = mesesDoAno.map((monthAbbrev, index) => {
-//       const monthName = new Date(0, index).toLocaleString('default', { month: 'short' });
-//       return monthName.charAt(0).toUpperCase();;
-//   });
-//     const moodValuesAnual = Object.values(moodData.anual).map(monthData => {
-//       const moodSum = monthData.reduce((sum, { mood }) => sum + (mood === 'excelente' ? 5 : mood === 'bem' ? 4 : mood === 'mais ou menos' ? 3 : mood === 'mal' ? 2 : 1), 0);
-//       return moodSum / monthData.length;
+    
+//       // Adicionar registro ao mês correspondente
+//       moodData.mensal[monthDB].push(mood);
+    
+//       // Calcular contagem de humores
+//       moodData.contagem[mood] = (moodData.contagem[mood] || 0) + 1;
 //     });
 
-//     const labelsMensal = Object.keys(moodData.mensal);
-//     const moodValuesMensal = Object.values(moodData.mensal).map(dayData => {
-//       const moodSum = dayData.reduce((sum, mood) => sum + (mood === 'excelente' ? 5 : mood === 'bem' ? 4 : mood === 'mais ou menos' ? 3 : mood === 'mal' ? 2 : 1), 0);
+//     // Agora vamos reorganizar os dados de moodData para refletir os dados mensais
+// const daysOfMonth = Array.from({ length: 31 }, (_, index) => index);
+// const diasComRegistros = registros.map(registro => {
+//   const data = new Date(registro.data_atual);
+//   let day = data.getDate() + 1;
+//   if (day > daysOfMonth.length) {
+//     day = 1;
+//   }
+//   return day;
+// }).filter((value, index, self) => self.indexOf(value) === index);
+// console.log('Dias com registros:', diasComRegistros);
+
+// const labelsMensal = diasComRegistros.map(day => {
+//   return (day).toLocaleString('default', { day: '2-digit' });
+// });
+
+// console.log('Etiquetas mensais:', labelsMensal);
+
+
+//     const reverseMoodMap = {
+//       'excelente': 5,
+//       'bem': 4,
+//       'mais ou menos': 3,
+//       'mal': 2,
+//       'horrível': 1,
+//       '': 0
+//     };
+
+//     const moodValuesMensal = diasComRegistros.map(dayIndex => {
+//       const dayData = moodData.mensal[dayIndex];
+//       console.log(dayIndex, moodData.mensal[dayIndex])
+//       if (dayData.length === 0) {
+//         return 0; // Sem registros para este dia
+//       }
+
+//       const moodSum = dayData.reduce((sum, mood) => {
+//         return sum + reverseMoodMap[mood];
+//       }, 0);
+
 //       return moodSum / dayData.length;
 //     });
 
 //     res.json({
-//       anual: { labels: labelsAnual, moodValues: moodValuesAnual },
 //       mensal: { labels: labelsMensal, moodValues: moodValuesMensal },
-//       contagem: Object.values(moodData.contagem),
-//       streak: 0 // Não está claro como calcular o streak, pode precisar ser revisado
+//       contagem: moodData.contagem,
+//       streak: 0
 //     });
 //   } catch (err) {
 //     console.error('Erro ao obter dados de humor:', err.message);
 //     res.status(500).send('Erro ao obter dados de humor');
 //   }
+
 // });
 
-app.get("/getMoodData", requireAuth, async (req, res) => {
+app.get("/getAnnualData", requireAuth, async (req, res) => {
   const userId = req.session.userId;
+  const year = req.query.year;
+
+  console.log(year)
 
   try {
     const registros = await dbAll(
-      "SELECT data_atual, avaliacao_humor FROM addHumor WHERE id_usuario = ? ORDER BY data_atual",
-      [userId]
+      "SELECT data_atual, avaliacao_humor FROM addHumor WHERE id_usuario = ? AND strftime('%Y', data_atual) = ? ORDER BY data_atual",
+      [userId, year]
     );
+    console.log(registros)
 
     if (registros.length === 0) {
       return res.json({ anual: { labels: [], moodValues: [] }, contagem: {} });
@@ -277,10 +411,10 @@ app.get("/getMoodData", requireAuth, async (req, res) => {
       moodData.contagem[mood] = (moodData.contagem[mood] || 0) + 1;
     });
 
-    const mesesDoAno = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    const labelsAnual = mesesDoAno.map((monthAbbrev, index) => {
-      const monthName = new Date(0, index).toLocaleString('default', { month: 'short' });
-      return monthName.charAt(0).toUpperCase();
+    // Agora vamos reorganizar os dados de moodData para refletir os dados anuais
+    const monthsOfYear = Array.from({ length: 12 }, (_, i) => i);
+    const labelsAnual = monthsOfYear.map(monthIndex => {
+      return new Date(0, monthIndex).toLocaleString('default', { month: 'short' }).toUpperCase();
     });
 
     const reverseMoodMap = {
@@ -288,10 +422,12 @@ app.get("/getMoodData", requireAuth, async (req, res) => {
       'bem': 4,
       'mais ou menos': 3,
       'mal': 2,
-      'horrível': 1
+      'horrível': 1,
+      '': 0
     };
 
-    const moodValuesAnual = moodData.anual.map(monthData => {
+    const moodValuesAnual = monthsOfYear.map(monthIndex => {
+      const monthData = moodData.anual[monthIndex];
       if (monthData.length === 0) {
         return 0; // Sem registros para este mês
       }
@@ -306,14 +442,13 @@ app.get("/getMoodData", requireAuth, async (req, res) => {
     res.json({
       anual: { labels: labelsAnual, moodValues: moodValuesAnual },
       contagem: moodData.contagem,
-      streak: 0 // Não sei como calcular
+      streak: 0
     });
   } catch (err) {
     console.error('Erro ao obter dados de humor:', err.message);
     res.status(500).send('Erro ao obter dados de humor');
   }
 });
-
 
 app.get("/addHumor", requireAuth, (req, res) => {
   res.render("addHumor.ejs");

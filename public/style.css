@@ -24,7 +24,7 @@ main{
 }
 
 header, footer{
-  background-color: #6c63ff;
+  background-color: rgb(108, 99, 255);
   color: white;
 }
 
@@ -75,23 +75,23 @@ header, footer{
 }
 
 .btn-excelente {
-  border: solid #43c72186;
+  border: solid rgba(51, 255, 0, 0.525);
 }
 
 .btn-bem {
-  border: solid #9bc72186;
+  border: solid rgba(155, 199, 33, 0.525);
 }
 
 .btn-mais {
-  border: solid #f0e62486;
+  border: solid rgba(240, 230, 36, 0.525);
 }
 
 .btn-mal {
-  border: solid #c7712186;
+  border: solid rgba(199, 113, 33, 0.525);
 }
 
 .btn-horrivel {
-  border: solid #c73a2186;
+  border: solid rgba(199, 33, 80, 0.525);
 }
 
 .btn-audio{
