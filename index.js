@@ -550,7 +550,7 @@ app.get("/editHumor", requireAuth, (req, res) => {
   res.render("editHumor.ejs");
 });
 
-app.get("/editHumor/:id", async (req, res) => {
+app.get("/editHumor/:id", upload.fields([{ name: 'foto' }, { name: 'audio' }]), async (req, res) => {
   console.log("A rota /editHumor/:id foi acessada."); 
   const userId = req.session.userId;
   const registroId = req.params.id;
@@ -580,10 +580,12 @@ app.get("/editHumor/:id", async (req, res) => {
 // Rota para processar a edição
 app.post("/editHumor/:id", requireAuth, upload.fields([{ name: 'foto' }, { name: 'audio' }]), async (req, res) => {
   const { data_atual, avaliacao_humor, emocoes, sono, social, clima, anotacao } = req.body;
+  const foto = req.files['foto'] ? req.files['foto'][0].filename : null;
+  const audio = req.files['audio'] ? req.files['audio'][0].filename : null;
   const userId = req.session.userId;
   const registroId = req.params.id;
 
-  console.log('Dados recebidos:', { data_atual, avaliacao_humor, emocoes, sono, social, clima, anotacao });
+  console.log('Dados recebidos:', { data_atual, avaliacao_humor, emocoes, sono, social, clima, anotacao, foto, audio });
 
   if (!userId) {
     return res.status(401).send('Usuário não autenticado');
@@ -607,8 +609,8 @@ app.post("/editHumor/:id", requireAuth, upload.fields([{ name: 'foto' }, { name:
 
   try {
     await dbRun(
-      `UPDATE addHumor SET data_atual = ?, avaliacao_humor = ?, emocoes = ?, sono = ?, social = ?, clima = ?, anotacao = ? WHERE id_registro = ?`,
-      [dataAtual, avaliacao_humor, emocoes, sono, social, clima, anotacao, registroId]
+      `UPDATE addHumor SET data_atual = ?, avaliacao_humor = ?, emocoes = ?, sono = ?, social = ?, clima = ?, anotacao = ?, foto = ?, audio = ? WHERE id_registro = ?`,
+      [dataAtual, avaliacao_humor, emocoes, sono, social, clima, anotacao, foto, audio, registroId]
     );
 
     res.redirect("/dashboard");

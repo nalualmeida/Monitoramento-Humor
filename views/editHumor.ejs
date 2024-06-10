@@ -231,6 +231,28 @@ header, footer{
       </div>
   </div>
 
+  <div class="form-group text-center">
+    <h2 class="form-heading">Foto</h2>
+    <div>
+      <input class="form-control" type="file" id="formFile" name="foto" value="/uploads/<%= registro.foto %>">
+    </div>
+</div>
+
+<div class="form-group text-center mb-4">
+  <h2 class="form-heading">Áudio</h2>
+  <!-- <div>
+      <button type="button" id="recordButton">Gravar</button>
+      <button type="button" id="stopButton" disabled>Parar</button>
+      <p id="recordingStatus"></p>
+        <input type="hidden" class="form-control" id="audio" name="audio">
+    </div> -->
+  <label for="audio">Gravador de Voz:</label><br>
+  <button class="btn-audio btn-custom rounded-pill px-3" type="button" id="recordButton">Gravar</button>
+  <button class="btn-audio btn-custom rounded-pill px-3" type="button" id="stopButton" disabled>Parar</button>
+  <p id="recordingStatus"></p>
+  <input type="file" id="audioInput" name="audio" accept="audio/*" style="display:none;" value="/uploads/<%= registro.audio %>">
+</div>
+
     <div class="container">
       <footer class="border-bottom py-2 fixed-bottom text-center">
       <div class="row align-items-center">
